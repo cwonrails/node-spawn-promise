@@ -37,7 +37,7 @@ test('resolve on success', assert => {
 
   spawn('sh', ['-c', 'exit 0'])
     .catch(_ => assert.fail('should not fail', _))
-    .then(streams => assert.same(streams, { stdout: new Buffer(''), stderr: new Buffer('') }))
+    .then(streams => assert.same(streams, { stdout: Buffer.from(''), stderr: Buffer.from('') }))
 })
 
 test('capture stdout', assert => {
@@ -45,7 +45,7 @@ test('capture stdout', assert => {
 
   spawn('node', ['-e', 'console.log("foo")'])
     .catch(_ => assert.fail('should not fail', _))
-    .then(streams => assert.same(streams, { stdout: Buffer('foo\n'), stderr: Buffer('') }))
+    .then(streams => assert.same(streams, { stdout: Buffer.from('foo\n'), stderr: Buffer.from('') }))
 })
 
 test('capture stderr', assert => {
@@ -53,7 +53,7 @@ test('capture stderr', assert => {
 
   spawn('node', ['-e', 'console.error("foo"); process.exit(1)'])
     .then(_ => assert.fail('should not succeed', _))
-    .catch(err => assert.same(err.stderr, Buffer('foo\n')))
+    .catch(err => assert.same(err.stderr, Buffer.from('foo\n')))
 })
 
 test('capture stdout & stderr on failure', assert => {
@@ -61,7 +61,7 @@ test('capture stdout & stderr on failure', assert => {
 
   spawn('node', ['-e', 'console.log("foo"); console.error("bar"); process.exit(1)'])
     .then(_ => assert.fail('should not succeed', _))
-    .catch(err => assert.match(err, { stdout: new Buffer('foo\n'), stderr: new Buffer('bar\n') }))
+    .catch(err => assert.match(err, { stdout: Buffer.from('foo\n'), stderr: Buffer.from('bar\n') }))
 })
 
 test('capture stdout & stderr on success', assert => {
@@ -69,7 +69,7 @@ test('capture stdout & stderr on success', assert => {
 
   spawn('node', ['-e', 'console.log("foo"); console.error("bar");'])
     .catch(_ => assert.fail('should not fail', _))
-    .then(streams => assert.same(streams, { stdout: Buffer('foo\n'), stderr: Buffer('bar\n') }))
+    .then(streams => assert.same(streams, { stdout: Buffer.from('foo\n'), stderr: Buffer.from('bar\n') }))
 })
 
 test('forward input stream', assert => {
@@ -77,7 +77,7 @@ test('forward input stream', assert => {
 
   spawn('grep', ['f'], {}, 'foo')
     .catch(_ => assert.fail('should not fail', _))
-    .then(streams => assert.same(streams, { stdout: Buffer('foo\n'), stderr: Buffer('') }))
+    .then(streams => assert.same(streams, { stdout: Buffer.from('foo\n'), stderr: Buffer.from('') }))
 })
 
 test('reject with exit code', assert => {
@@ -92,7 +92,7 @@ test('reject with exit code', assert => {
       assert.equal(err.syscall, 'spawn grep')
       assert.equal(err.path, 'grep')
       assert.same(err.spawnargs, ['--s'])
-      assert.same(err.stdout, new Buffer(''))
+      assert.same(err.stdout, Buffer.from(''))
       assert.match(err.stderr.toString(), 'Usage: grep [OPTION]')
     })
 })
